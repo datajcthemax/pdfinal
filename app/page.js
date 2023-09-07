@@ -14,7 +14,6 @@ export default function Home() {
     <>
       <SearchBar onSearch={handleSearch} />
       <StockDashboard query={query} />
-      {/* hello! */}
     </>
   );
 }
