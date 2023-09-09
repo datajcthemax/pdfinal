@@ -11,9 +11,11 @@ export default function Home() {
   };
 
   return (
-    <>
-      <SearchBar onSearch={handleSearch} />
+    <div className="relative">
+      <div className="flex justify-center mt-8">
+        <SearchBar onSearch={handleSearch} />
+      </div>
       <StockDashboard query={query} />
-    </>
+    </div>
   );
 }
