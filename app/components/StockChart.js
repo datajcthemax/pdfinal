@@ -21,7 +21,7 @@ function StockChart({ data, symbol }) {
       }
 
       const newChartInstance = new Chart(ctx, {
-        type: 'line',
+        type: 'line', // 라인 그래프로 변경
         data: {
           labels: data.map(item => item.Date),
           datasets: [
@@ -30,12 +30,14 @@ function StockChart({ data, symbol }) {
               data: data.map(item => item.Close),
               borderColor: '#00b4d8',
               fill: false,
+              yAxisID: 'yPrice', // 가격 데이터의 y 축 ID 설정
             },
             {
-              label: 'Open Price',
-              data: data.map(item => item.Open),
-              borderColor: '#fca311',
-              fill: false,
+              label: 'Volume',
+              data: data.map(item => item.Volume),
+              type: 'bar', // 바 그래프로 변경
+              backgroundColor: '#FF5733',
+              yAxisID: 'yVolume', // 거래량 데이터의 y 축 ID 설정
             },
           ],
         },
@@ -43,7 +45,7 @@ function StockChart({ data, symbol }) {
           responsive: true,
           title: {
             display: true,
-            text: symbol
+            text: symbol,
           },
           scales: {
             x: {
@@ -52,9 +54,29 @@ function StockChart({ data, symbol }) {
                 unit: 'day',
               },
             },
-            y: {
+            yPrice: { // 가격 데이터의 y 축
               beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Price',
+              }
             },
+            yVolume: { // 거래량 바 그래프의 y 축
+              beginAtZero: true,
+              position: 'right', // y 축 위치 설정
+              title: {
+                display: true,
+                text: 'Volume',
+              },
+            },
+          },
+          tooltips: {
+            mode: 'index', // 인덱스 모드 설정
+            intersect: false,
+          },
+          hover: {
+            mode: 'index', // 인덱스 모드 설정
+            intersect: false,
           },
         },
       });
