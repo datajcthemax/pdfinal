@@ -1,47 +1,38 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-// 이 함수는 예시입니다. 실제로는 백엔드 API를 호출하거나 데이터베이스를 조회할 것입니다.
-async function fetchCompanyData(company) {
-  const mockData = {
-    'Apple': { description: 'Apple Inc. is an American multinational technology company.', stock: 'AAPL', stockPrice: '150.00', change: '+1.50' },
-    // 여기에 다른 회사 데이터를 추가할 수 있습니다.
-  };
-
-  return mockData[company];
-}
-
-export default function CompanyInfo() {
-  const router = useRouter();
-  const { company } = router.query ?? {};
-  const [companyData, setCompanyData] = useState(null);
+function SymbolPage(props) {
+  const [articles, setArticles] = useState([]);
 
   useEffect(() => {
-    if (company) {
-      fetchCompanyData(company).then(data => setCompanyData(data));
-    }
-  }, [company]);
+    const API_KEY = '6fba73255d1744f7882bd43ab3b17e26';
+    const ENDPOINT = `https://newsapi.org/v2/everything?q=${props.params.company}&apiKey=${API_KEY}&pageSize=5`;
 
-  if (!companyData) {
-    return <div>Loading...</div>;
-  }
+    fetch(ENDPOINT)
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'ok') {
+          setArticles(data.articles);
+        } else {
+          console.error('Error fetching articles:', data.message);
+        }
+      })
+      .catch(error => console.error('Error fetching articles:', error));
+  }, [props.params.company]);
 
   return (
-    <div>
-      <h1>{company}</h1>
-      <p>{companyData.description}</p>
-      <div>
-        <strong>Stock Symbol:</strong> {companyData.stock}
-      </div>
-      <div>
-        <strong>Stock Price:</strong> ${companyData.stockPrice}
-      </div>
-      <div>
-        <strong>Change:</strong> {companyData.change}
-      </div>
-      {/* 실제로는 주식 정보나 차트 등을 여기에 표시합니다. */}
+    <div className="p-5">
+      <h1 className="text-3xl font-bold mb-4">{props.params.company}</h1>
+      {articles.map((article, index) => (
+        <div key={index} className="mb-4 p-3 border rounded shadow-md">
+          <h2 className="text-xl mb-2">{article.title}</h2>
+          <p className="mb-2 text-sm">{article.description}</p>
+          <a href={article.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline text-xs">Read more</a>
+        </div>
+      ))}
     </div>
   );
 }
+
+export default SymbolPage;
