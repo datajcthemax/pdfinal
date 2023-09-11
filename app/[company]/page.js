@@ -19,8 +19,9 @@ function SymbolPage(props) {
 
 
   useEffect(() => {
-    const API_KEY = '6fba73255d1744f7882bd43ab3b17e26';
+    const API_KEY = process.env.NEXT_PUBLIC_NEWS_API_KEY;
     const ENDPOINT = `https://newsapi.org/v2/everything?q=${props.params.company}&apiKey=${API_KEY}&pageSize=5`;
+    
 
     fetch(ENDPOINT)
       .then(response => response.json())
@@ -39,9 +40,9 @@ function SymbolPage(props) {
 
   return (
     <>
-      <StockChart data={stockData} symbol={props.params.company} />
       <div className="p-5">
         <h1 className="text-3xl font-bold mb-4">{props.params.company}</h1>
+        <StockChart data={stockData} symbol={props.params.company} />
         {articles.map((article, index) => (
           <div key={index} className="mb-4">
             <div className="inline-block p-3 border rounded shadow-md">
