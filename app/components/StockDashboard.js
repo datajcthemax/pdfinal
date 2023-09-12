@@ -25,8 +25,9 @@ export default function StockDashboard({ query }) {
   }, []);
 
   const filteredStocks = query
-    ? stocks.filter((stock) => stock.Symbol.toLowerCase().includes(query.toLowerCase()))
-    : stocks;
+  ? stocks.filter((stock) => stock.Symbol.toLowerCase().startsWith(query.toLowerCase()))
+  : stocks;
+
 
   return (
     <div className="mt-32 flex justify-center">

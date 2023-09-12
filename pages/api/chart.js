@@ -20,7 +20,8 @@ export default async function handler(req, res) {
       s1.Close,
       s1.High,
       s1.Low,
-      s1.Volume
+      s1.Volume,
+      s1.Change
     FROM stock_data s1
     WHERE s1.Symbol = ? 
     AND s1.Date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)

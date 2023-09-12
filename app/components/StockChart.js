@@ -13,11 +13,10 @@ function StockChart({ data, symbol }) {
 
   useEffect(() => {
     if (data && data.length > 0 && chartRef.current) {
-      const reversedData = [...data].reverse();  // 데이터 배열을 복사하고 반대로 정렬
+      const reversedData = [...data].reverse();
 
       const ctx = chartRef.current.getContext('2d');
 
-      // 기존 차트 인스턴스 파괴
       if (chartInstance) {
         chartInstance.destroy();
       }
@@ -54,26 +53,37 @@ function StockChart({ data, symbol }) {
               type: 'category',
               ticks: {
                 callback: function(value, index, values) {
-                  const dateStr = reversedData[index].Date;  // reversedData에서 날짜 값을 가져옵니다.
+                  const dateStr = reversedData[index].Date;
                   const dateParts = dateStr.split('T')[0].split('-');
-                  const year = dateParts[0];
-                  const month = dateParts[1];
-                  const day = dateParts[2];
-                  return `${year}-${month}-${day}`;  
+                  return `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}`;
                 }
               }
             },
             yPrice: {
-              beginAtZero: true,
+              position: 'left',
               title: {
                 display: true,
                 text: 'Price',
-              }
+              },
+              grid: {
+                drawOnChartArea: true,
+              },
             },
             yVolume: {
-              display: false,
-              beginAtZero: true,
+              type: 'linear',
               position: 'right',
+              title: {
+                display: false,
+              },
+              ticks: {
+                display: false,
+              },
+              grid: {
+                drawOnChartArea: false,
+              },
+              afterFit: (scale) => {
+                scale.height = scale.chart.height * 0.3;  // Adjust the height of the bar graph
+              }
             },
           },
           tooltips: {
@@ -83,10 +93,7 @@ function StockChart({ data, symbol }) {
               title: function(tooltipItems, data) {
                 const dateStr = tooltipItems[0].label || '';
                 const dateParts = dateStr.split('T')[0].split('-');
-                const year = dateParts[0];
-                const month = dateParts[1];
-                const day = dateParts[2];
-                return `${year}-${month}-${day}`; 
+                return `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}`;
               }
             }
           },
@@ -97,7 +104,6 @@ function StockChart({ data, symbol }) {
         },
       });
 
-      // 새로운 차트 인스턴스 저장
       setChartInstance(newChartInstance);
     }
   }, [data]);
