@@ -2,3 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Light mode */
+  body {
+    background-color: white;
+    color: black;
+  }
+  
+  /* Dark mode */
+  body.dark {
+    background-color: black;
+    color: white;
+  }
+  
+  /* 기본 스타일 */
+.card {
+  background-color: white;
+  color: black;
+  /* ... 기타 스타일 ... */
+}
+
+.label {
+  color: black;
+  /* ... 기타 스타일 ... */
+}
+
+/* 다크 모드 활성화될 때의 스타일 */
+body.dark .card {
+  background-color: gray; /* 카드의 배경색을 회색으로 */
+  color: white; /* 카드 내의 글자색을 흰색으로 */
+}
+
+body.dark .label {
+  color: white; /* 라벨의 글자색을 흰색으로 */
+}
+
+.dark .card {
+  background-color: #2c2c2c; /* 다크 모드에서 카드의 배경색 */
+}
+
+.dark .label {
+  color: #e5e5e5; /* 다크 모드에서 레이블의 색상 */
+}

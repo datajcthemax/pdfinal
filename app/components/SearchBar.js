@@ -1,7 +1,7 @@
 'use client';
 import { useState } from "react";
 
-function SearchBar({ onSearch }) {
+function SearchBar({ onSearch, darkMode }) {
   const [query, setQuery] = useState("");
 
   const handleSearch = (e) => {
@@ -10,21 +10,21 @@ function SearchBar({ onSearch }) {
     onSearch(newQuery);
   };
 
-  // 한국 시간대를 기준으로 오늘의 날짜를 가져옵니다.
   const date = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+  
   return (
     <div className="fixed top-0 left-1/2 transform -translate-x-1/2 mt-8 z-50">
       <div className="flex flex-col items-center">
-        <div className="flex items-center border-2 border-gray-300 p-2 rounded-md mb-2">
+        <div className={`flex items-center p-2 rounded-md mb-2 ${darkMode ? 'border-white bg-white' : 'border-gray-500 bg-white'}`}>
           <input
             type="text"
             value={query}
             onChange={handleSearch}
-            className="flex-grow outline-none"
+            className={`flex-grow outline-none border-2 ${darkMode ? 'text-black placeholder-gray-700 border-white' : 'text-black placeholder-gray-600 border-gray-500'}`}
             placeholder="Search..."
           />
         </div>
-        <span className="text-gray-500 text-sm flex items-center">
+        <span className={`text-sm flex items-center ${darkMode ? 'text-white' : 'text-gray-800'}`}>
           🌻 <span className="ml-1">{date}</span>
         </span>
       </div>
@@ -33,3 +33,4 @@ function SearchBar({ onSearch }) {
 }
 
 export default SearchBar;
+
