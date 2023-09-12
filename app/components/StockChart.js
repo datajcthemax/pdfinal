@@ -13,6 +13,8 @@ function StockChart({ data, symbol }) {
 
   useEffect(() => {
     if (data && data.length > 0 && chartRef.current) {
+      const reversedData = [...data].reverse();  // 데이터 배열을 복사하고 반대로 정렬
+
       const ctx = chartRef.current.getContext('2d');
 
       // 기존 차트 인스턴스 파괴
@@ -21,23 +23,23 @@ function StockChart({ data, symbol }) {
       }
 
       const newChartInstance = new Chart(ctx, {
-        type: 'line', // 라인 그래프로 변경
+        type: 'line',
         data: {
-          labels: data.map(item => item.Date),
+          labels: reversedData.map(item => item.Date),
           datasets: [
             {
-              label: 'Close Price',
-              data: data.map(item => item.Close),
-              borderColor: '#00b4d8',
+              label: 'Price',
+              data: reversedData.map(item => item.Close),
+              borderColor: '#B6C3A2',
               fill: false,
-              yAxisID: 'yPrice', // 가격 데이터의 y 축 ID 설정
+              yAxisID: 'yPrice',
             },
             {
               label: 'Volume',
-              data: data.map(item => item.Volume),
-              type: 'bar', // 바 그래프로 변경
-              backgroundColor: '#FF5733',
-              yAxisID: 'yVolume', // 거래량 데이터의 y 축 ID 설정
+              data: reversedData.map(item => item.Volume),
+              type: 'bar',
+              backgroundColor: '#FBB9AB',
+              yAxisID: 'yVolume',
             },
           ],
         },
@@ -49,33 +51,47 @@ function StockChart({ data, symbol }) {
           },
           scales: {
             x: {
-              type: 'time',
-              time: {
-                unit: 'day',
-              },
+              type: 'category',
+              ticks: {
+                callback: function(value, index, values) {
+                  const dateStr = reversedData[index].Date;  // reversedData에서 날짜 값을 가져옵니다.
+                  const dateParts = dateStr.split('T')[0].split('-');
+                  const year = dateParts[0];
+                  const month = dateParts[1];
+                  const day = dateParts[2];
+                  return `${year}-${month}-${day}`;  
+                }
+              }
             },
-            yPrice: { // 가격 데이터의 y 축
+            yPrice: {
               beginAtZero: true,
               title: {
                 display: true,
                 text: 'Price',
               }
             },
-            yVolume: { // 거래량 바 그래프의 y 축
+            yVolume: {
+              display: false,
               beginAtZero: true,
-              position: 'right', // y 축 위치 설정
-              title: {
-                display: true,
-                text: 'Volume',
-              },
+              position: 'right',
             },
           },
           tooltips: {
-            mode: 'index', // 인덱스 모드 설정
+            mode: 'index',
             intersect: false,
+            callbacks: {
+              title: function(tooltipItems, data) {
+                const dateStr = tooltipItems[0].label || '';
+                const dateParts = dateStr.split('T')[0].split('-');
+                const year = dateParts[0];
+                const month = dateParts[1];
+                const day = dateParts[2];
+                return `${year}-${month}-${day}`; 
+              }
+            }
           },
           hover: {
-            mode: 'index', // 인덱스 모드 설정
+            mode: 'index',
             intersect: false,
           },
         },
