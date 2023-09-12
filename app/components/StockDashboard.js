@@ -12,6 +12,8 @@ export default function StockDashboard({ query }) {
           throw new Error('Failed to fetch data');
         }
         const data = await response.json();
+        // Logging the fetched data to the console
+        console.log(data);
         setStocks(data);
       } catch (error) {
         console.error('Error fetching stock data:', error);
@@ -30,12 +32,6 @@ export default function StockDashboard({ query }) {
     <div className="mt-32 flex justify-center">
       <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
         {filteredStocks.map((stock, index) => {
-          let changeRate = null;
-
-          if (stock.PreviousClose) {
-            changeRate = ((stock.Price - stock.PreviousClose) / stock.PreviousClose) * 100;
-          }
-
           return (
             <Link key={index} href={`/${encodeURIComponent(stock.Symbol)}`}>
               <div className="cursor-pointer bg-white p-4 rounded-lg shadow-md w-64 transition transform duration-200 ease-in-out hover:scale-105 hover:bg-blue-100">
@@ -50,18 +46,14 @@ export default function StockDashboard({ query }) {
                 </div>
                 <div className="flex justify-between items-center">
                   <span>Change:</span>
-                  <span className={`font-medium ${changeRate && changeRate >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {changeRate ? changeRate.toFixed(2) + "%" : 'N/A'}
+                  <span className={`font-medium ${stock.Change && stock.Change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    {stock.Change ? stock.Change.toFixed(2) + "%" : 'N/A'}
                   </span>
                 </div>
               </div>
             </Link>
           );
         })}
-
-
-
-
       </div>
     </div>
   );

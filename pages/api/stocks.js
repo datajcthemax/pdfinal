@@ -14,22 +14,17 @@ export default async function handler(req, res) {
 
       const query = `
       SELECT 
-        s1.Symbol, 
-        s1.Close AS Price, 
-        s1.Volume,
-        s2.Close AS PreviousClose
-      FROM stock_data s1
-      LEFT JOIN stock_data s2 ON s1.Symbol = s2.Symbol AND DATE_ADD(s2.Date, INTERVAL 1 DAY) = s1.Date
-      WHERE s1.Date = (SELECT MAX(Date) FROM stock_data WHERE Symbol = s1.Symbol)
-      GROUP BY s1.Symbol
+        Symbol, 
+        Close AS Price, 
+        \`Change\`,
+        Volume
+      FROM stock_data
+      WHERE (Symbol, Date) IN (
+        SELECT Symbol, MAX(Date) 
+        FROM stock_data
+        GROUP BY Symbol
+      )
     `;
-    
-    
-    
-    
-    
-    
-
 
       const [rows] = await connection.execute(query);
       res.status(200).json(rows);
