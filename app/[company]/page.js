@@ -11,33 +11,27 @@ function SymbolPage(props) {
     fetch(`/api/chart?symbol=${props.params.company}`)
     .then(response => response.json())
     .then(data => {
-        console.log(data);  // 여기에 로그를 추가
+        console.log(data);
         setStockData(data);
     })
     .catch(error => console.error('Error fetching stock data:', error));
-}, []);
-
+  }, []);
 
   useEffect(() => {
-    const API_KEY = process.env.NEXT_PUBLIC_NEWS_API_KEY;
-    console.log(API_KEY)
-    const ENDPOINT = `https://newsapi.org/v2/everything?q=${props.params.company}&apiKey=${API_KEY}&pageSize=5`;
-    
+    const CURRENTS_API_KEY = process.env.NEXT_PUBLIC_CURRENTS_API_KEY;
+    const ENDPOINT = `https://api.currentsapi.services/v1/search?keywords=${props.params.company}&apiKey=${CURRENTS_API_KEY}&page_size=5`;
 
     fetch(ENDPOINT)
       .then(response => response.json())
       .then(data => {
         if (data.status === 'ok') {
-          setArticles(data.articles);
+          setArticles(data.news);
         } else {
           console.error('Error fetching articles:', data.message);
         }
       })
       .catch(error => console.error('Error fetching articles:', error));
   }, [props.params.company]);
-
-  console.log(stockData);
-
 
   return (
     <>
