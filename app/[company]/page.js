@@ -58,7 +58,7 @@ function SymbolPage(props) {
         <h1 className="text-3xl font-bold dark:text-white">{props.params.company}</h1>
         {/* 다크 모드 토글 버튼 */}
         <button onClick={toggleDarkMode} className="mr-4 text-3xl">
-          {darkMode ? '🌞' : '🌙'}
+          {darkMode ? '🌙' : '☀️'}
         </button>
       </div>
       <div className="text-2xl dark:text-gray-300">

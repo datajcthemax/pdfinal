@@ -27,13 +27,10 @@ export default function Home() {
     <div className="relative">
       <header className="fixed top-0 left-0 w-full bg-white dark:bg-gray-800 z-50 flex justify-between items-center p-4 shadow-md">
         <img src="/logo/logo.png" alt="Company Logo" className="w-24 h-24" />
-        <div className="flex items-center">
-          {/* 다크 모드 토글 버튼 */}
-          <button onClick={toggleDarkMode} className="mr-4 text-3xl">
-            {darkMode ? '🌞' : '🌙'}
-          </button>
-          <SearchBar onSearch={handleSearch} darkMode={darkMode} />
-        </div>
+        <SearchBar onSearch={handleSearch} darkMode={darkMode} />
+        <button onClick={toggleDarkMode} className="text-3xl">
+            {darkMode ? '☀️' : '🌙'}
+        </button>
       </header>
       <div className="pt-32">
         <StockDashboard query={query} />
