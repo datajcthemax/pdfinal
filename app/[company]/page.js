@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react";
 import StockChart from "../components/StockChart";
 import NewsArticles from "../components/NewsArticles";
+import CompanyInfo from "../components/CompanyInfo";
+import BalanceSheet from "../components/BalanceSheet";
 
 function SymbolPage(props) {
   const [articles, setArticles] = useState([]);
   const [stockData, setStockData] = useState([]);
-  const [stockInfo, setStockInfo] = useState({}); 
+  const [stockInfo, setStockInfo] = useState({});
   const [companyInfo, setCompanyInfo] = useState("");
+  const [balanceSheetData, setBalanceSheetData] = useState([]);
 
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState();
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -20,6 +23,17 @@ function SymbolPage(props) {
       document.body.classList.remove("dark");
     }
   };
+
+  useEffect(() => {
+    fetch(`/api/financialStatements?symbol=${props.params.company}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setBalanceSheetData(data);
+      })
+      .catch((error) =>
+        console.error("Error fetching financial statements:", error)
+      );
+  }, [props.params.company]);
 
   useEffect(() => {
     fetch(`/api/chart?symbol=${props.params.company}`)
@@ -39,7 +53,7 @@ function SymbolPage(props) {
     const fetchCompanyInfo = async () => {
       try {
         const response = await fetch(
-          `/api/companyInfo?symbol=${props.params.company}`  // symbol을 쿼리 파라미터로 전달
+          `/api/companyInfo?symbol=${props.params.company}` // symbol을 쿼리 파라미터로 전달
         );
         const data = await response.json();
         const companyData = data[0];
@@ -75,7 +89,7 @@ function SymbolPage(props) {
           {props.params.company}
         </h1>
         <button onClick={toggleDarkMode} className="mr-4 text-3xl">
-          {darkMode ? "🌙" : "☀️"}
+          {darkMode ? "☀️" : "🌙"}
         </button>
       </div>
       <div className="text-2xl dark:text-gray-300">
@@ -90,13 +104,12 @@ function SymbolPage(props) {
       >
         {stockInfo.Change?.toFixed(2)}% {stockInfo.Change >= 0 ? "👍" : "👎"}
       </div>
-      <div className="card">
+      <div className="card w-full md:w-3/4 lg:w-2/3 xl:w-1/2 mx-auto">
         <StockChart data={stockData} symbol={props.params.company} />
       </div>
-      <div className="mt-4 mb-4 dark:text-white">
-        <h2 className="text-xl font-bold">Company Information</h2>
-        <p>{companyInfo}</p>
-      </div>
+
+      <CompanyInfo info={companyInfo} />
+      <BalanceSheet data={balanceSheetData} />
       <NewsArticles articles={articles} />
     </div>
   );

@@ -5,7 +5,7 @@ import StockDashboard from "./components/StockDashboard";
 
 export default function Home() {
   const [query, setQuery] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState();
 
   const handleSearch = (searchQuery) => {
     setQuery(searchQuery);
