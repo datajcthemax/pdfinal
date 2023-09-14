@@ -13,18 +13,16 @@ export default async function handler(req, res) {
       });
 
       const query = `
-      SELECT 
-        Symbol, 
-        Close AS Price, 
-        \`Change\`,
-        Volume
-      FROM stock_data
-      WHERE (Symbol, Date) IN (
-        SELECT Symbol, MAX(Date) 
-        FROM stock_data
-        GROUP BY Symbol
-      )
+      SELECT s.Symbol, s.Close AS Price, s.Change, s.Volume
+      FROM stock_data s
+      JOIN (
+          SELECT Symbol, MAX(Date) AS MaxDate
+          FROM stock_data
+          GROUP BY Symbol
+      ) latest ON s.Symbol = latest.Symbol AND s.Date = latest.MaxDate
     `;
+    
+    
 
       const [rows] = await connection.execute(query);
       res.status(200).json(rows);
