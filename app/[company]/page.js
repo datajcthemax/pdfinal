@@ -88,20 +88,23 @@ function SymbolPage(props) {
   
 
   useEffect(() => {
-    const CURRENTS_API_KEY = process.env.NEXT_PUBLIC_CURRENTS_API_KEY;
-    const ENDPOINT = `/api/currents?company=${companyInfo.name}`;
+    if (companyInfo.name) {  // 이 조건을 추가합니다.
+        const CURRENTS_API_KEY = process.env.NEXT_PUBLIC_CURRENTS_API_KEY;
+        const ENDPOINT = `/api/currents?company=${companyInfo.name}`;
 
-    fetch(ENDPOINT)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "ok") {
-          setArticles(data.news);
-        } else {
-          console.error("Error fetching articles:", data.message);
-        }
-      })
-      .catch((error) => console.error("Error fetching articles:", error));
+        fetch(ENDPOINT)
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.status === "ok") {
+                setArticles(data.news);
+            } else {
+                console.error("Error fetching articles:", data.message);
+            }
+        })
+        .catch((error) => console.error("Error fetching articles:", error));
+    }
 }, [props.params.company, companyInfo.name]);
+
 
   useEffect(() => {
     const fetchData = async (endpoint, setter) => {
