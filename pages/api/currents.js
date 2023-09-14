@@ -6,11 +6,18 @@ export default async (req, res) => {
     const ENDPOINT = `https://api.currentsapi.services/v1/search?keywords=${company}&apiKey=${CURRENTS_API_KEY}&page_size=5`;
     try {
       const response = await fetch(ENDPOINT);
-      const data = await response.json();
+      
+      if (!response.ok) {
+          console.error(`Error fetching from currentsapi: ${response.status} ${response.statusText}`);
+          return res.status(500).json({ error: 'Failed to fetch data from currentsapi' });
+      }
   
+      const data = await response.json();
       res.status(200).json(data);
-    } catch (error) {
+  } catch (error) {
+      console.error('Error in /api/currents:', error);
       res.status(500).json({ error: 'Failed to fetch data' });
-    }
+  }
+  
   };
   
