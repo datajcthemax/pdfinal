@@ -142,7 +142,7 @@ function SymbolPage(props) {
       >
         {stockInfo.Change?.toFixed(2)}% {stockInfo.Change >= 0 ? "👍" : "👎"}
       </div>
-      <div className="card w-full md:w-3/4 lg:w-2/3 xl:w-1/2 mx-auto">
+      <div className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 mx-auto">
         <StockChart data={stockData} symbol={props.params.company} />
       </div>
 
