@@ -71,7 +71,6 @@ function SymbolPage(props) {
 
   useEffect(() => {
     const fetchCompanyInfo = async () => {
-      console.log("Company Info:", companyInfo);
       try {
         const response = await fetch(
           `/api/companyInfo?symbol=${props.params.company}` // symbol을 쿼리 파라미터로 전달
@@ -145,10 +144,10 @@ function SymbolPage(props) {
         {stockInfo.Change?.toFixed(2)}% {stockInfo.Change >= 0 ? "👍" : "👎"}
       </div>
       <div className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 mx-auto">
+        <h3 className="text-center text-2xl">Monthly Price and Volume Chart</h3>
         <StockChart data={stockData} symbol={props.params.company} />
       </div>
 
-      <CompanyInfo info={companyInfo.longBusinessSummary} />
       <FinancialTab
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -156,6 +155,7 @@ function SymbolPage(props) {
         cashFlowData={cashFlowData}
         financialStatementData={financialStatementData}
       />
+      <CompanyInfo info={companyInfo.longBusinessSummary} />
       <NewsArticles articles={articles} />
     </div>
   );

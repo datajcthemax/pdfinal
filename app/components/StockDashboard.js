@@ -12,7 +12,6 @@ export default function StockDashboard({ query }) {
           throw new Error('Failed to fetch data');
         }
         const data = await response.json();
-        console.log(data);
         setStocks(data);
       } catch (error) {
         console.error('Error fetching stock data:', error);
@@ -36,7 +35,7 @@ export default function StockDashboard({ query }) {
               <div className="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md w-64 transition transform duration-200 ease-in-out hover:scale-105 dark:hover:bg-gray-700 text-black dark:text-white">
                 <h2 className="text-xl font-semibold mb-2">{stock.Symbol}</h2>
                 <div className="flex justify-between items-center">
-                  <span>Stock Price:</span>
+                  <span>Stock:</span>
                   <span className="text-green-500 dark:text-green-300 font-semibold">${stock.Price.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center">

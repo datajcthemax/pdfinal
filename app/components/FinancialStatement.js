@@ -12,7 +12,7 @@ function FinancialStatement({ data }) {
   
     return (
       <div className="mt-4 mb-4">
-        <h2 className="text-xl font-bold dark:text-white">Financial Statement</h2>
+        <h2 className="text-xl font-bold dark:text-white">Income Statement</h2>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white dark:bg-gray-800 w-full">
             <thead>

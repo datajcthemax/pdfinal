@@ -5,10 +5,11 @@ import FinancialStatement from './FinancialStatement';
 function FinancialTab({ activeTab, setActiveTab, balanceSheetData, cashFlowData, financialStatementData }) {
     return (
         <div>
+            <div className='text-center text-2xl pt-10'>Financial Statement</div>
             <div className="tabs">
                 <button onClick={() => setActiveTab('bs')} className={activeTab === 'bs' ? 'active-tab' : ''}>Balance Sheet</button>
                 <button onClick={() => setActiveTab('cf')} className={activeTab === 'cf' ? 'active-tab' : ''}>Cash Flow</button>
-                <button onClick={() => setActiveTab('fs')} className={activeTab === 'fs' ? 'active-tab' : ''}>Financial Statement</button>
+                <button onClick={() => setActiveTab('fs')} className={activeTab === 'fs' ? 'active-tab' : ''}>Income Statement</button>
             </div>
 
             {activeTab === 'bs' && <BalanceSheet data={balanceSheetData} />}
