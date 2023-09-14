@@ -3,7 +3,7 @@
 function BalanceSheet({ data }) {
 
   const formatCurrency = (amount) => {
-    return `$${parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    return `$${parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 0 })}`;
   };
 
   return (

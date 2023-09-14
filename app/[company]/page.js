@@ -5,6 +5,8 @@ import StockChart from "../components/StockChart";
 import NewsArticles from "../components/NewsArticles";
 import CompanyInfo from "../components/CompanyInfo";
 import BalanceSheet from "../components/BalanceSheet";
+import CashFlow from "../components/CashFlow";
+import FinancialStatement from "../components/FinancialStatement";
 
 function SymbolPage(props) {
   const [articles, setArticles] = useState([]);
@@ -12,7 +14,9 @@ function SymbolPage(props) {
   const [stockInfo, setStockInfo] = useState({});
   const [companyInfo, setCompanyInfo] = useState("");
   const [balanceSheetData, setBalanceSheetData] = useState([]);
-
+  const [cashFlowData, setCashFlowData] = useState([]);
+  const [financialStatementData, setFinancialStatementData] = useState([]);
+  const [activeTab, setActiveTab] = useState('bs');  // 기본적으로 "bs" 탭을 활성화
   const [darkMode, setDarkMode] = useState();
 
   const toggleDarkMode = () => {
@@ -25,13 +29,35 @@ function SymbolPage(props) {
   };
 
   useEffect(() => {
-    fetch(`/api/financialStatements?symbol=${props.params.company}`)
+    fetch(`/api/bs?symbol=${props.params.company}`)
       .then((response) => response.json())
       .then((data) => {
         setBalanceSheetData(data);
       })
       .catch((error) =>
-        console.error("Error fetching financial statements:", error)
+        console.error("Error fetching balance sheet:", error)
+      );
+  }, [props.params.company]);
+
+  useEffect(() => {
+    fetch(`/api/cf?symbol=${props.params.company}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setCashFlowData(data);
+      })
+      .catch((error) =>
+        console.error("Error fetching cash flow:", error)
+      );
+  }, [props.params.company]);
+
+  useEffect(() => {
+    fetch(`/api/fs?symbol=${props.params.company}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setFinancialStatementData(data);
+      })
+      .catch((error) =>
+        console.error("Error fetching financial statement:", error)
       );
   }, [props.params.company]);
 
@@ -82,6 +108,23 @@ function SymbolPage(props) {
       .catch((error) => console.error("Error fetching articles:", error));
   }, [props.params.company]);
 
+  useEffect(() => {
+    const fetchData = async (endpoint, setter) => {
+        try {
+            const response = await fetch(`/api/${endpoint}?symbol=${props.params.company}`);
+            const data = await response.json();
+            setter(data);
+        } catch (error) {
+            console.error(`Error fetching ${endpoint} data:`, error);
+        }
+    };
+
+    if (activeTab === 'bs') fetchData('bs', setBalanceSheetData);
+    if (activeTab === 'cf') fetchData('cf', setCashFlowData);
+    if (activeTab === 'fs') fetchData('fs', setFinancialStatementData);
+}, [activeTab, props.params.company]);
+
+
   return (
     <div className="p-5 dark:bg-black">
       <div className="flex justify-between items-center">
@@ -109,7 +152,15 @@ function SymbolPage(props) {
       </div>
 
       <CompanyInfo info={companyInfo} />
-      <BalanceSheet data={balanceSheetData} />
+      <div className="tabs">
+            <button onClick={() => setActiveTab('bs')} className={activeTab === 'bs' ? 'active-tab' : ''}>Balance Sheet</button>
+            <button onClick={() => setActiveTab('cf')} className={activeTab === 'cf' ? 'active-tab' : ''}>Cash Flow</button>
+            <button onClick={() => setActiveTab('fs')} className={activeTab === 'fs' ? 'active-tab' : ''}>Financial Statement</button>
+      </div>
+
+        {activeTab === 'bs' && <BalanceSheet data={balanceSheetData} />}
+        {activeTab === 'cf' && <CashFlow data={cashFlowData} />}  
+        {activeTab === 'fs' && <FinancialStatement data={financialStatementData} />}
       <NewsArticles articles={articles} />
     </div>
   );

@@ -1,4 +1,4 @@
-// pages/api/financialStatements.js
+// pages/api/fs.js
 
 import mysql from 'mysql2/promise';
 
@@ -10,13 +10,13 @@ export default async function handler(req, res) {
         port: parseInt(process.env.DB_PORT, 10),
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
-        database: process.env.WEB_FS_DATABASE,  // 새로운 데이터베이스 이름 사용
+        database: process.env.WEB_FS_DATABASE,
       });
 
-      // 이 쿼리는 예제로 작성된 것입니다. 실제 테이블 및 필드 이름에 따라 수정해야 합니다.
+      // 쿼리는 예제로 작성되었습니다. 실제 테이블 및 필드 이름에 따라 수정해야 합니다.
       const query = `
       SELECT * 
-      FROM bs 
+      FROM fs 
       WHERE symbol = ?
     `;
 
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       res.status(200).json(rows);
       connection.end();
     } catch (error) {
-      console.error('Error fetching financial statements:', error);
+      console.error('Error fetching financial statement data:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   } else {
