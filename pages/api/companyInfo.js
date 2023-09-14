@@ -8,7 +8,7 @@ export default async function handler(req, res) {
         port: parseInt(process.env.DB_PORT, 10),
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
+        database: process.env.WEB_FS_DATABASE,
       });
 
       const symbol = req.query.symbol;  // 요청에서 symbol 값을 가져옵니다.
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         symbol, 
         name, 
         longBusinessSummary
-      FROM company_info
+      FROM symbol_list
       WHERE symbol = ?
     `;
 

@@ -71,24 +71,26 @@ function SymbolPage(props) {
 
   useEffect(() => {
     const fetchCompanyInfo = async () => {
+      console.log("Company Info:", companyInfo);
       try {
         const response = await fetch(
           `/api/companyInfo?symbol=${props.params.company}` // symbol을 쿼리 파라미터로 전달
         );
         const data = await response.json();
         const companyData = data[0];
-        setCompanyInfo(companyData?.longBusinessSummary || "");
+        setCompanyInfo(companyData || {});
       } catch (error) {
         console.error("Error fetching company info:", error);
       }
     };
-
+  
     fetchCompanyInfo();
   }, [props.params.company]);
+  
 
   useEffect(() => {
     const CURRENTS_API_KEY = process.env.NEXT_PUBLIC_CURRENTS_API_KEY;
-    const ENDPOINT = `/api/currents?company=${props.params.company}`;
+    const ENDPOINT = `/api/currents?company=${companyInfo.name}`;
 
     fetch(ENDPOINT)
       .then((response) => response.json())
@@ -100,7 +102,7 @@ function SymbolPage(props) {
         }
       })
       .catch((error) => console.error("Error fetching articles:", error));
-  }, [props.params.company]);
+}, [props.params.company, companyInfo.name]);
 
   useEffect(() => {
     const fetchData = async (endpoint, setter) => {
@@ -124,7 +126,7 @@ function SymbolPage(props) {
     <div className="p-5 dark:bg-black">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold dark:text-white">
-          {props.params.company}
+          {props.params.company}({companyInfo.name})
         </h1>
         <button onClick={toggleDarkMode} className="mr-4 text-3xl">
           {darkMode ? "☀️" : "🌙"}
@@ -146,7 +148,7 @@ function SymbolPage(props) {
         <StockChart data={stockData} symbol={props.params.company} />
       </div>
 
-      <CompanyInfo info={companyInfo} />
+      <CompanyInfo info={companyInfo.longBusinessSummary} />
       <FinancialTab
         activeTab={activeTab}
         setActiveTab={setActiveTab}
