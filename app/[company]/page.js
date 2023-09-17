@@ -5,6 +5,8 @@ import StockChart from "../components/StockChart";
 import NewsArticles from "../components/NewsArticles";
 import CompanyInfo from "../components/CompanyInfo";
 import FinancialTab from "../components/FinancialTab";
+import Link from 'next/link';
+
 
 function SymbolPage(props) {
   const [articles, setArticles] = useState([]);
@@ -18,13 +20,33 @@ function SymbolPage(props) {
   const [darkMode, setDarkMode] = useState();
 
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    if (darkMode) {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    if (newMode) {
       document.body.classList.add("dark");
+      localStorage.setItem("darkMode", "true");
     } else {
       document.body.classList.remove("dark");
+      localStorage.setItem("darkMode", "false");
     }
   };
+
+  useEffect(() => {
+    const storedDarkMode = localStorage.getItem("darkMode");
+    if (storedDarkMode) {
+      setDarkMode(storedDarkMode === "true");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+
 
   useEffect(() => {
     fetch(`/api/bs?symbol=${props.params.company}`)
@@ -82,28 +104,28 @@ function SymbolPage(props) {
         console.error("Error fetching company info:", error);
       }
     };
-  
+
     fetchCompanyInfo();
   }, [props.params.company]);
-  
+
 
   useEffect(() => {
     if (companyInfo.name) {  // 이 조건을 추가합니다.
-        const CURRENTS_API_KEY = process.env.NEXT_PUBLIC_CURRENTS_API_KEY;
-        const ENDPOINT = `/api/currents?company=${companyInfo.name}`;
+      const CURRENTS_API_KEY = process.env.NEXT_PUBLIC_CURRENTS_API_KEY;
+      const ENDPOINT = `/api/currents?company=${companyInfo.name}`;
 
-        fetch(ENDPOINT)
+      fetch(ENDPOINT)
         .then((response) => response.json())
         .then((data) => {
-            if (data.status === "ok") {
-                setArticles(data.news);
-            } else {
-                console.error("Error fetching articles:", data.message);
-            }
+          if (data.status === "ok") {
+            setArticles(data.news);
+          } else {
+            console.error("Error fetching articles:", data.message);
+          }
         })
         .catch((error) => console.error("Error fetching articles:", error));
     }
-}, [props.params.company, companyInfo.name]);
+  }, [props.params.company, companyInfo.name]);
 
 
   useEffect(() => {
@@ -125,42 +147,51 @@ function SymbolPage(props) {
   }, [activeTab, props.params.company]);
 
   return (
-    <div className="p-5 dark:bg-black">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold dark:text-white">
-          {props.params.company}({companyInfo.name})
-        </h1>
-        <button onClick={toggleDarkMode} className="mr-4 text-3xl">
-          {darkMode ? "☀️" : "🌙"}
-        </button>
-      </div>
-      <div className="text-2xl dark:text-gray-300">
-        ${stockInfo.Price?.toFixed(2)}
-      </div>
-      <div
-        className={`text-lg mb-2 ${
-          stockInfo.Change >= 0
+    <>
+      <div className="p-5 dark:bg-black">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold dark:text-white">
+            {props.params.company}({companyInfo.name})
+          </h1>
+          <div className="flex items-center space-x-4">
+            <Link href="/">
+              <div className="bg-blue-500 hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-gray-500 text-white font-bold py-2 px-4 rounded">
+                홈으로
+              </div>
+            </Link>
+            <button onClick={toggleDarkMode} className="text-3xl">
+              {darkMode ? "☀️" : "🌙"}
+            </button>
+          </div>
+        </div>
+
+        <div className="text-2xl dark:text-gray-300">
+          ${stockInfo.Price?.toFixed(2)}
+        </div>
+        <div
+          className={`text-lg mb-2 ${stockInfo.Change >= 0
             ? "text-green-500 dark:text-green-300"
             : "text-red-500 dark:text-red-300"
-        }`}
-      >
-        {stockInfo.Change?.toFixed(2)}% {stockInfo.Change >= 0 ? "👍" : "👎"}
-      </div>
-      <div className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 mx-auto">
-        <h3 className="text-center text-2xl">Monthly Price and Volume Chart</h3>
-        <StockChart data={stockData} symbol={props.params.company} />
-      </div>
+            }`}
+        >
+          {stockInfo.Change?.toFixed(2)}% {stockInfo.Change >= 0 ? "👍" : "👎"}
+        </div>
+        <div className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 mx-auto">
+          <h3 className="text-center text-2xl">Monthly Price and Volume Chart</h3>
+          <StockChart data={stockData} symbol={props.params.company} />
+        </div>
 
-      <FinancialTab
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        balanceSheetData={balanceSheetData}
-        cashFlowData={cashFlowData}
-        financialStatementData={financialStatementData}
-      />
-      <CompanyInfo info={companyInfo.longBusinessSummary} />
-      <NewsArticles articles={articles} />
-    </div>
+        <FinancialTab
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          balanceSheetData={balanceSheetData}
+          cashFlowData={cashFlowData}
+          financialStatementData={financialStatementData}
+        />
+        <CompanyInfo info={companyInfo.longBusinessSummary} />
+        <NewsArticles articles={articles} />
+      </div>
+    </>
   );
 }
 
