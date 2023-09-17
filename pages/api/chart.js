@@ -29,13 +29,6 @@ export default async function handler(req, res) {
     
     `;
     
-    
-    
-    
-    
-    
-
-
     const [rows] = await connection.execute(query, [req.query.symbol]);
     res.status(200).json(rows);
       connection.end();

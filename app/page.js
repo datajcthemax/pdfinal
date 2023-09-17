@@ -48,13 +48,13 @@ export default function Home() {
 
   return (
     <div className="relative">
-      <header className="fixed top-0 left-0 w-full bg-gray-200 dark:bg-gray-800 z-50 flex justify-between items-center p-4 shadow-md">
-        <img src="/logo/logo.png" alt="Company Logo" className="w-24 h-24" />
-        <SearchBar onSearch={handleSearch} darkMode={darkMode} />
-        <button onClick={toggleDarkMode} className="text-3xl">
-          {darkMode ? '☀️' : '🌙'}
-        </button>
-      </header>
+       <header className="fixed top-0 left-0 w-full bg-gray-200 dark:bg-gray-800 z-50 flex justify-between items-center p-4 shadow-md">
+      <img src="/logo/logo.png" alt="Company Logo" className="w-20 h-20 mr-4 sm:w-24 sm:h-24 sm:mr-6" />
+      <SearchBar onSearch={handleSearch} darkMode={darkMode} className="mx-2 w-3/4 sm:mx-6 sm:w-3/4" />
+      <button onClick={toggleDarkMode} className="text-2xl ml-4 sm:text-3xl sm:ml-6">
+        {darkMode ? '☀️' : '🌙'}
+      </button>
+    </header>
       <div className="pt-32">
         <StockDashboard query={query} />
       </div>
