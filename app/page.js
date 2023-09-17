@@ -23,6 +23,11 @@ export default function Home() {
     }
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+
 
   useEffect(() => {
     const storedDarkMode = localStorage.getItem("darkMode");
@@ -53,6 +58,9 @@ export default function Home() {
       <div className="pt-32">
         <StockDashboard query={query} />
       </div>
+      <button onClick={scrollToTop} className="scrollToTopButton">
+        ⬆️
+      </button>
     </div>
   );
 }

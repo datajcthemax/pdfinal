@@ -31,6 +31,10 @@ function SymbolPage(props) {
     }
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   useEffect(() => {
     const storedDarkMode = localStorage.getItem("darkMode");
     if (storedDarkMode) {
@@ -110,8 +114,7 @@ function SymbolPage(props) {
 
 
   useEffect(() => {
-    if (companyInfo.name) {  // 이 조건을 추가합니다.
-      const CURRENTS_API_KEY = process.env.NEXT_PUBLIC_CURRENTS_API_KEY;
+    if (companyInfo.name) {
       const ENDPOINT = `/api/currents?company=${companyInfo.name}`;
 
       fetch(ENDPOINT)
@@ -191,6 +194,9 @@ function SymbolPage(props) {
         <CompanyInfo info={companyInfo.longBusinessSummary} />
         <NewsArticles articles={articles} />
       </div>
+      <button onClick={scrollToTop} className="scrollToTopButton">
+        ⬆️
+      </button>
     </>
   );
 }

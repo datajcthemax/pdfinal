@@ -91,3 +91,26 @@ body.dark .label {
 .dark .active-tab {
   background-color: #4a7477; /* 다크 모드 활성 탭 색상 */
 }
+
+.scrollToTopButton {
+  position: fixed; 
+  bottom: 20px; 
+  right: 20px;
+  z-index: 100; 
+  font-size: 24px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.scrollToTopButton:hover {
+  background-color: #555;
+}
