@@ -156,7 +156,7 @@ function SymbolPage(props) {
           <div className="flex items-center space-x-4">
             <Link href="/">
               <div className="bg-blue-500 hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-gray-500 text-white font-bold py-2 px-4 rounded">
-                홈으로
+              🏠
               </div>
             </Link>
             <button onClick={toggleDarkMode} className="text-3xl">
